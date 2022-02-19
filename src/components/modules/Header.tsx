@@ -11,6 +11,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles(() => ({
   navlinks: {
     textDecoration: 'none',
+    marginRight: '15px',
     '&:hover': {
       opacity: 0.7
     }
@@ -27,7 +28,7 @@ const Header = () => {
           <Box
             sx={{
               flexGrow: 1,
-              display: { xs: 'flex', md: 'flex', alignItems: 'center', justifyContent: 'center' }
+              display: { xs: 'flex', md: 'flex', alignItems: 'center' }
             }}
           >
             {menu.map((page: IMenu) => (

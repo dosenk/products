@@ -51,7 +51,7 @@ const MediaCard: FC<IMediaCard> = ({ product }) => {
       </CardContent>
       <CardActions>
         <Button size="small">
-          <NavLink to={`product/${product.id}`}>Read more</NavLink>
+          <NavLink to={`products/${product.id}`}>Read more</NavLink>
         </Button>
       </CardActions>
     </Card>
