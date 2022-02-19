@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import Header from './components/Header';
 import Routes from './components/Routes';
 // import { useAppDispatch, useAppSelector } from './hooks/redux';
@@ -8,10 +8,8 @@ import Routes from './components/Routes';
 const App = () => {
   return (
     <div className="App">
-      <Header></Header>
-      <main>
-        <Routes />
-      </main>
+      <Header />
+      <Routes />
     </div>
   );
 };
