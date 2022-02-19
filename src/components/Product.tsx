@@ -1,11 +1,8 @@
 import {
-  Avatar,
   Box,
   Card,
   CardHeader,
   CircularProgress,
-  IconButton,
-  colors,
   CardMedia,
   CardContent,
   Typography,
@@ -17,7 +14,6 @@ import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { IProduct } from '../models/IProduct';
 import { useFethAppProductQuery } from '../services/ProducService';
-import ShareIcon from '@mui/icons-material/Share';
 import StarIcon from '@mui/icons-material/Star';
 
 interface IParams {
@@ -36,7 +32,13 @@ const Product: FC<IProduct> = () => {
       ) : product ? (
         <Card sx={{ maxWidth: 545 }}>
           <CardHeader title={product.title} subheader={`${product.price}$`} />
-          <CardMedia component="img" height="300" image={product.image} alt="Paella dish" />
+          <CardMedia
+            component="img"
+            height="300"
+            image={product.image}
+            alt={product.title}
+            sx={{ objectFit: 'scale-down' }}
+          />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               {product.description}
