@@ -1,6 +1,7 @@
 import { Grid } from '@mui/material';
 import { lazy, Suspense } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+
 const Products = lazy(() => import('./Products'));
 const Product = lazy(() => import('./Product'));
 const ProductForm = lazy(() => import('./ProductForm'));

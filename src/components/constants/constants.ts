@@ -10,3 +10,26 @@ export const menu: IMenu[] = [
     link: '/products/add'
   }
 ];
+
+export const productFormInputs = [
+  {
+    name: 'title',
+    type: 'text'
+  },
+  {
+    name: 'price',
+    type: 'text'
+  },
+  {
+    name: 'description',
+    type: 'text'
+  },
+  {
+    name: 'image',
+    type: 'file'
+  },
+  {
+    name: 'category',
+    type: 'text'
+  }
+];

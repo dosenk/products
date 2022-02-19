@@ -23,7 +23,7 @@ interface IParams {
 const Product: FC<IProduct> = () => {
   const { id } = useParams<IParams>();
   const { data: product, isLoading, error } = useFethAppProductQuery(id);
-
+  console.log(product);
   return (
     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       {error ? 'Sorry. Server is not responding...' : ''}
