@@ -23,6 +23,9 @@ const useStyles = makeStyles(() => ({
       transform: 'scale(1.02)',
       transition: '0.2s'
     }
+  },
+  cardMedia: {
+    margin: '0 auto'
   }
 }));
 
@@ -32,14 +35,11 @@ const MediaCard: FC<IMediaCard> = ({ product }) => {
     <Card className={classes.card}>
       <CardMedia
         component="img"
-        height="180"
         image={product.image}
+        height="180"
         alt="card-image"
-        sx={{
-          width: '100%',
-          margin: '0 auto',
-          objectFit: 'scale-down'
-        }}
+        className={classes.cardMedia}
+        sx={{ objectFit: 'scale-down' }}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
