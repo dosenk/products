@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.scss';
-import Header from './components/Header';
+import Header from './components/modules/Header';
 import Routes from './components/Routes';
 // import { useAppDispatch, useAppSelector } from './hooks/redux';
 // import { productApi, useFetchAppProductsQuery } from './services/ProducService';

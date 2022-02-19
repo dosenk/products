@@ -5,11 +5,10 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { FC } from 'react';
-import { IProduct } from '../models/IProduct';
+import { IProduct } from '../../models/IProduct';
 import { makeStyles } from '@mui/styles';
-import { sliceDescription, sliceTitle } from '../utils/utils';
+import { sliceDescription, sliceTitle } from '../../utils/utils';
 import { NavLink } from 'react-router-dom';
-import { Box } from '@mui/material';
 
 interface IMediaCard {
   product: IProduct;

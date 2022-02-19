@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { useMemo, useState } from 'react';
 import { useFetchAppProductsQuery } from '../services/ProducService';
 import { sliceProduct } from '../utils/utils';
-import MediaCard from './MediaCard';
+import MediaCard from './modules/MediaCard';
 
 const useStyles = makeStyles(() => ({
   paginator: {
