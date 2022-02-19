@@ -2,17 +2,6 @@
   "name": "products",
   "version": "0.1.0",
   "description": "test-task",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dosenk/products.git"
-  },
-  "author": "Dmitry Osipenko",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dosenk/products/issues"
-  },
-  "homepage": "https://github.com/dosenk/products#readme",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
