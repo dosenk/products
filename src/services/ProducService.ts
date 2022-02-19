@@ -15,11 +15,17 @@ export const productApi = createApi({
     fethAppProduct: build.query<IProduct, string>({
       query: (product) => ({
         url: `/${product}`
-        // method: 'POST'
-        // body: product
+      })
+    }),
+    fethAppAddProduct: build.query<IProduct, IProduct>({
+      query: (product) => ({
+        url: `/${product}`,
+        method: 'POST',
+        body: product
       })
     })
   })
 });
 
-export const { useFetchAppProductsQuery, useFethAppProductQuery } = productApi;
+export const { useFetchAppProductsQuery, useFethAppProductQuery, useFethAppAddProductQuery } =
+  productApi;
