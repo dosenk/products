@@ -7,37 +7,56 @@ import {
   OutlinedInput
 } from '@mui/material';
 import AttachmentTwoToneIcon from '@mui/icons-material/AttachmentTwoTone';
-import React, { useRef, useState } from 'react';
+import React, { LegacyRef, RefObject, useRef, useState } from 'react';
 
-export const FileInput = ({ name, value, handleChange, error, setError }: any) => {
-  const fileInput: any = useRef();
-  const [val, setVal] = useState(value);
+interface FileInputProps {
+  name: string;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
+  errors: boolean;
+  setErrors: (error: boolean) => void;
+}
 
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement> | any) => {
+interface IFiles {
+    name: string;
+}
+
+export const FileInput: React.FC<FileInputProps> = ({ name, handleChange, errors, setErrors }) => {
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [val, setVal] = useState('');
+
+  const getImage = () => {
+    const { current } = fileInput;
+    current?.click();
+  };
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const files: FileList = e.target.files!;
     const { files } = e.target;
-    if (!files[0]) return;
-    setVal(files[0].name);
-    handleChange(e, name);
-    setError(files[0].name.search('.img') == -1);
+    // const { name } = files[0];
+    if (files?.length) return;
+      const fileName = files?[0].name;
+    setVal(name);
+    handleChange(e, fileName);
+      setErrors(files?[0].name.search('.img') === -1);
   };
 
   return (
     <FormControl fullWidth sx={{ marginBottom: '15px' }}>
       <input type="file" ref={fileInput} style={{ display: 'none' }} onChange={handleChangeInput} />
-      <InputLabel error={error} sx={{ height: '100%', zIndex: '10' }} htmlFor={name}>
+      <InputLabel error={errors} sx={{ height: '100%', zIndex: '10' }} htmlFor={name}>
         {name}
       </InputLabel>
       <OutlinedInput
-        onClick={() => fileInput.current.click()}
+        onClick={getImage}
         id={name}
-        error={error}
+        error={errors}
         type="text"
         value={val || ''}
         endAdornment={
           <InputAdornment position="end" sx={{ position: 'absolute', right: '0px' }}>
             <IconButton aria-label="file">
               <AttachmentTwoToneIcon
-                color={error ? 'error' : 'primary'}
+                color={errors ? 'error' : 'primary'}
                 sx={{
                   transform: 'rotate(135deg) scaleX(-1)'
                 }}
@@ -46,7 +65,7 @@ export const FileInput = ({ name, value, handleChange, error, setError }: any) =
           </InputAdornment>
         }
       />
-      <FormHelperText sx={{ color: '#000' }}>{error ? 'get only .img' : ''}</FormHelperText>
+      <FormHelperText sx={{ color: '#000' }}>{errors ? 'get only .img' : ''}</FormHelperText>
     </FormControl>
   );
 };

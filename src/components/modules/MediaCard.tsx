@@ -43,10 +43,10 @@ const MediaCard: FC<IMediaCard> = ({ product }) => {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {sliceTitle(product.title)}
+          {sliceTitle(product.title ?? '')}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {sliceDescription(product.description)}
+          {sliceDescription(product.description ?? '')}
         </Typography>
       </CardContent>
       <CardActions>

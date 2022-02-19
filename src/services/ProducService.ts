@@ -12,14 +12,14 @@ export const productApi = createApi({
         url: '/'
       })
     }),
-    fethAppProduct: build.query<IProduct, string>({
+    fetchAppProduct: build.query<IProduct, string>({
       query: (product) => ({
         url: `/${product}`
       })
     }),
-    fethAppAddProduct: build.query<IProduct, IProduct>({
+    addProduct: build.mutation<IProduct, IProduct>({
       query: (product) => ({
-        url: `/${product}`,
+        url: `/`,
         method: 'POST',
         body: product
       })
@@ -27,5 +27,5 @@ export const productApi = createApi({
   })
 });
 
-export const { useFetchAppProductsQuery, useFethAppProductQuery, useFethAppAddProductQuery } =
+export const { useFetchAppProductsQuery, useFetchAppProductQuery, useAddProductMutation } =
   productApi;

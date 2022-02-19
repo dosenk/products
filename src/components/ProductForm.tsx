@@ -1,23 +1,27 @@
 import { Box, TextField, Grid, Button } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState, useEffect } from 'react';
+import { useAddProductMutation } from '../services/ProducService';
 import { productFormInputs } from './constants/constants';
 import { FileInput } from './modules/FileInput';
+import { IProduct } from '../models/IProduct';
 
 const ProductForm = () => {
-  const [product, setProduct] = useState({});
-  const [error, setError] = useState(false);
+  const [product, setProduct] = useState<IProduct>({});
+  const [errors, setErrors] = useState(false);
+  const [addProduct, {}] = useAddProductMutation();
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | any>,
-    name: string
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
     const { value, type, files } = e.target;
-    setProduct({ ...product, [name]: type === 'file' ? files[0].name : value });
+    setProduct({ ...product, [name]: type === 'file' ? files?[0].name : value });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const res = await addProduct(product);
+    console.log(res);
     console.log(product);
   };
+
+  useEffect(() => {}, [product]);
 
   return (
     <Grid
@@ -43,8 +47,8 @@ const ProductForm = () => {
             <FileInput
               key={input.name}
               {...input}
-              error={error}
-              setError={setError}
+              errors={errors}
+              setErrors={setErrors}
               handleChange={handleChange}
             />
           );

@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AsyncThunk, createAsyncThunk, createSlice, PayloadAction, Slice } from '@reduxjs/toolkit';
+import { AxiosResponse } from 'axios';
+import { $api } from '../../api/api';
 import { IProduct } from '../../models/IProduct';
 
 interface ProductState {
@@ -13,15 +15,15 @@ const initialState: ProductState = {
   error: ''
 };
 
-export const productSlice = createSlice({
+export const productSlice: Slice<ProductState> = createSlice({
   name: 'product',
   initialState,
   reducers: {
-    addProduct(state, action: PayloadAction<IProduct>) {
+    add(state, action: PayloadAction<IProduct>) {
       state.products.push(action.payload);
     }
   }
 });
 
 export default productSlice.reducer;
-export const { addProduct } = productSlice.actions;
+export const { add } = productSlice.actions;
