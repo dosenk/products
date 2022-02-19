@@ -8,6 +8,7 @@ import MediaCard from './MediaCard';
 const useStyles = makeStyles(() => ({
   paginator: {
     position: 'absolute',
+    height: '55px',
     bottom: 0,
     right: 0
   }
@@ -36,17 +37,14 @@ const Products = () => {
   );
 
   return (
-    <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 64px)' }}>
+    <Box sx={{ height: '100%' }}>
       <Grid
         container
         item
-        justifyContent="center"
+        justifyContent="space-around"
         alignItems="center"
-        overflow="auto"
-        height="calc(100vh - 116px)"
-        gap={10}
-        padding="55px 0"
-        fontSize={21}
+        height="calc(100% - 55px)"
+        fontSize={15}
       >
         {isLoading ? <CircularProgress /> : ''}
         {listProducts?.map((product) => (

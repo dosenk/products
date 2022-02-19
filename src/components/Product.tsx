@@ -36,7 +36,13 @@ const Product: FC<IProduct> = () => {
       ) : product ? (
         <Card sx={{ maxWidth: 545 }}>
           <CardHeader title={product.title} subheader={`${product.price}$`} />
-          <CardMedia component="img" height="300" image={product.image} alt="Paella dish" />
+          <CardMedia
+            component="img"
+            height="300"
+            image={product.image}
+            alt={product.title}
+            sx={{ objectFit: 'scale-down' }}
+          />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               {product.description}

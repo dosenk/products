@@ -9,6 +9,7 @@ import { IProduct } from '../models/IProduct';
 import { makeStyles } from '@mui/styles';
 import { sliceDescription, sliceTitle } from '../utils/utils';
 import { NavLink } from 'react-router-dom';
+import { Box } from '@mui/material';
 
 interface IMediaCard {
   product: IProduct;
@@ -17,10 +18,11 @@ interface IMediaCard {
 const useStyles = makeStyles(() => ({
   card: {
     maxWidth: 400,
-    minHeight: 630,
+    // minHeight: 400,
+    margin: '5px',
     '&:hover': {
-      transform: 'scale(1.05)',
-      transition: '0.5s'
+      transform: 'scale(1.02)',
+      transition: '0.2s'
     }
   }
 }));
@@ -29,7 +31,17 @@ const MediaCard: FC<IMediaCard> = ({ product }) => {
   const classes = useStyles();
   return (
     <Card className={classes.card}>
-      <CardMedia component="img" height="450" image={product.image} alt="green iguana" />
+      <CardMedia
+        component="img"
+        height="200"
+        image={product.image}
+        alt="card-image"
+        sx={{
+          width: '100%',
+          margin: '0 auto',
+          objectFit: 'scale-down'
+        }}
+      />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {sliceTitle(product.title)}
