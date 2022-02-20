@@ -82,7 +82,7 @@ const Table = ({
   isSearch = false,
   isResetSelectedRow = true,
   style = {
-    footer: {}
+    footer: { display: 'none' }
   },
   isLoading
 }: iTable) => {
@@ -274,7 +274,7 @@ const Table = ({
               page={pageIndex}
               labelRowsPerPage="Rows per page:"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}-${to} "in" ${count}`;
+                return `${from}-${to} in ${count}`;
               }}
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore

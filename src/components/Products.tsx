@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import ProductTable from './modules/ProductTable';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { addProducts } from '../store/reducers/ProductSlice';
+import Table from './modules/Table/Table';
+import { tableColumns } from './constants/constants';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -63,6 +65,10 @@ const Products = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [tab, setTab] = React.useState(0);
+  // const { products: publicProducts } = useAppSelector((state) => state.productReducer);
+  const addedProducts = localStorage.getItem('products') ?? '';
+  // const [addedProducts, setAddedProducts] = useState(addedProducts ? JSON.parse(addedProducts) : []);
+  // const a = useAppSelector((state) => state.productReducer.products);
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -83,6 +89,8 @@ const Products = () => {
     () => sliceProduct(products, page, rowsPerPage),
     [page, rowsPerPage, products]
   );
+
+  console.log(listProducts);
 
   useEffect(() => {
     dispatch(addProducts(products));
@@ -112,7 +120,18 @@ const Products = () => {
         </Grid>
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        <ProductTable />
+        <Table
+          columns={tableColumns}
+          data={listProducts}
+          onclick={() => {}}
+          multipleSelector={false}
+          //   selectedId={selectedId}
+          sortBy={tableColumns[0].accessor}
+          // rowsPerPageOptions={[8, 16, 20]}
+          // onPageChangeClick={handleChangeRowsPerPage}
+          isLoading={isLoading}
+          isSearch={false}
+        />
       </TabPanel>
       <TablePagination
         className={classes.paginator}
