@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { IProduct } from '../models/IProduct';
 import { useFetchAppProductQuery } from '../services/ProducService';
 import StarIcon from '@mui/icons-material/Star';
 
@@ -20,7 +19,7 @@ interface IParams {
   id: string;
 }
 
-const Product: FC<IProduct> = () => {
+const Product: FC = () => {
   const { id } = useParams<IParams>();
   const { data: product, isLoading, error } = useFetchAppProductQuery(id);
 

@@ -4,6 +4,7 @@ import { saveProduct, useAddProductMutation } from '../services/ProducService';
 import { productFormInputs } from './constants/constants';
 import { FileInput } from './modules/FileInput';
 import { IProduct } from '../models/IProduct';
+import { useAppDispatch } from '../hooks/redux';
 
 const ProductForm = () => {
   const [product, setProduct] = useState<IProduct>({});
@@ -20,8 +21,7 @@ const ProductForm = () => {
   };
 
   const handleSave = async () => {
-    const res = await addProduct(product);
-    // console.log(res.data); // хуйня какая-то !! !! !!
+    const res = await addProduct(product).unwrap();
     setProduct({});
     saveProduct(res);
   };

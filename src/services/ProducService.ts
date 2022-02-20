@@ -11,26 +11,23 @@ export const productApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://fakestoreapi.com/products'
   }),
-  tagTypes: ['Product'],
   endpoints: (build) => ({
     fetchAppProducts: build.query<IProduct[], ''>({
       query: () => ({
         url: '/'
-      }),
-      providesTags: (result) => ['Product']
+      })
     }),
     fetchAppProduct: build.query<IProduct, string>({
       query: (product) => ({
         url: `/${product}`
       })
     }),
-    addProduct: build.mutation<IData, IProduct>({
+    addProduct: build.mutation<IProduct, IProduct>({
       query: (product) => ({
         url: `/`,
         method: 'POST',
         body: product
-      }),
-      invalidatesTags: ['Product']
+      })
     })
   })
 });
@@ -38,15 +35,15 @@ export const productApi = createApi({
 export const { useFetchAppProductsQuery, useFetchAppProductQuery, useAddProductMutation } =
   productApi;
 
-export const saveProduct = ({ data }: any) => {
+export const saveProduct = (product: IProduct): void => {
   const products = localStorage.getItem('products');
 
   if (!products) {
-    localStorage.setItem('products', JSON.stringify([data]));
+    localStorage.setItem('products', JSON.stringify([product]));
     return;
   }
   const prodArr = JSON.parse(products);
-  console.log(prodArr);
-  prodArr.push(data);
+  const lastId = prodArr[prodArr.length - 1].id;
+  prodArr.push({ ...product, id: lastId + 1 });
   localStorage.setItem('products', JSON.stringify(prodArr));
 };

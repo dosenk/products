@@ -1,0 +1,23 @@
+.MuiDataGrid-root {
+  .MuiDataGrid-columnHeaderTitle {
+    font-size: small;
+    font-weight: 800 !important;
+  }
+  .MuiDataGrid-footerContainer {
+    min-height: 43px;
+    height: 43px;
+  }
+  .MuiDataGrid-columnSeparator {
+    display: none !important;
+  }
+  .MuiDataGrid-columnHeader {
+    padding: 0 !important;
+  }
+  .Mui-selected {
+    background-color: #333234 !important;
+    color: aliceblue;
+  }
+  .MuiDataGrid-row:nth-child(even) {
+    background-color: #d6d6d6;
+  }
+}
