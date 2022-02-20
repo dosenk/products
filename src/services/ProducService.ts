@@ -24,7 +24,7 @@ export const productApi = createApi({
         url: `/${product}`
       })
     }),
-    addProduct: build.mutation<IProduct, IProduct>({
+    addProduct: build.mutation<IData, IProduct>({
       query: (product) => ({
         url: `/`,
         method: 'POST',
@@ -38,9 +38,15 @@ export const productApi = createApi({
 export const { useFetchAppProductsQuery, useFetchAppProductQuery, useAddProductMutation } =
   productApi;
 
-export const saveProduct = (
-  product: { data: IProduct } | { error: FetchBaseQueryError | SerializedError }
-) => {
+export const saveProduct = ({ data }: any) => {
   const products = localStorage.getItem('products');
-  // console.log(product?.data);
+
+  if (!products) {
+    localStorage.setItem('products', JSON.stringify([data]));
+    return;
+  }
+  const prodArr = JSON.parse(products);
+  console.log(prodArr);
+  prodArr.push(data);
+  localStorage.setItem('products', JSON.stringify(prodArr));
 };

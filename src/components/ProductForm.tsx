@@ -21,7 +21,7 @@ const ProductForm = () => {
 
   const handleSave = async () => {
     const res = await addProduct(product);
-    console.log(res);
+    // console.log(res.data); // хуйня какая-то !! !! !!
     setProduct({});
     saveProduct(res);
   };

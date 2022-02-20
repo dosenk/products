@@ -39,8 +39,14 @@ const Products = () => {
   );
 
   return (
-    <Box sx={{ height: '100%' }}>
-      <Grid container item justifyContent="space-around" alignItems="baseline" height="100%">
+    <Box>
+      <Grid
+        container
+        item
+        justifyContent="space-around"
+        alignItems="baseline"
+        height="calc(100% - 55px)"
+      >
         {isLoading ? (
           <CircularProgress
             sx={{ position: 'absolute', top: '50%', transform: 'translate(0,-50%)' }}
