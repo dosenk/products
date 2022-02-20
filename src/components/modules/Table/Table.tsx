@@ -248,7 +248,10 @@ const Table = ({
                   {...row.getRowProps()}
                   onClick={() => {
                     if (!multipleSelector) toggleAllRowsSelected(false);
-                    if (typeof onclick === 'function') onclick(row);
+                    if (typeof onclick === 'function') {
+                      onclick(row);
+                      row.toggleRowSelected();
+                    }
                   }}
                 >
                   {row.cells.map((cell: any) => {

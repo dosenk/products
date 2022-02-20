@@ -13,6 +13,7 @@ const Routes = () => {
         <Switch>
           <Route path="/products" exact component={Products} />
           <Route path="/products/add" exact component={ProductForm} />
+          <Route path="/products/edit/:id" exact component={ProductForm} />
           <Route path="/products/:id" component={Product} />
           <Route exact path="*">
             <Redirect to="/products" />

@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
   card: {
     maxWidth: 400,
     minHeight: 360,
-    margin: '25px 10px',
+    margin: '0 10px 25px 10px',
     '&:hover': {
       transform: 'scale(1.02)',
       transition: '0.2s'

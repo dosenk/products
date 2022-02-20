@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles(() => ({
+export const navLinkStyle = makeStyles(() => ({
   navlinks: {
     textDecoration: 'none',
     marginRight: '15px',
@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Header = () => {
-  const classes = useStyles();
+  const classes = navLinkStyle();
 
   return (
     <AppBar position="static" className="header">

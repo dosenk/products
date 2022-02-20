@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid, TablePagination } from '@mui/material';
+import { Box, Button, ButtonGroup, CircularProgress, Grid, TablePagination } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useEffect, useMemo, useState } from 'react';
 import { useFetchAppProductsQuery } from '../services/ProducService';
@@ -13,6 +13,9 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { addProducts } from '../store/reducers/ProductSlice';
 import Table from './modules/Table/Table';
 import { tableColumns } from './constants/constants';
+import { NavLink } from 'react-router-dom';
+import { IProduct } from '../models/IProduct';
+import NavBtns from './modules/NavBtns';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -28,6 +31,27 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     bottom: 0,
     right: 0
+  },
+  buttons: {
+    position: 'relative',
+    left: '10px',
+    '& a': {
+      color: '#fff',
+      textDecoration: 'none'
+    }
+  },
+  mainBox: {
+    padding: '10px',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between'
+  },
+  grid: {
+    justifyContent: 'space-around',
+    alignItems: 'baseline',
+    height: 'calc(100% - 50px)',
+    width: '95%'
+    // marginBottom: '55px'
   }
 }));
 
@@ -66,12 +90,20 @@ const Products = () => {
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [tab, setTab] = React.useState(0);
   // const { products: publicProducts } = useAppSelector((state) => state.productReducer);
-  const addedProducts = localStorage.getItem('products') ?? '';
+  const addedProducts = JSON.parse(localStorage.getItem('products') ?? '');
   // const [addedProducts, setAddedProducts] = useState(addedProducts ? JSON.parse(addedProducts) : []);
   // const a = useAppSelector((state) => state.productReducer.products);
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+
+  const handleTableClick = (row: any) => {
+    setSelectedProduct(row.original);
+    console.log(row);
+    // row.toggleRowSelected();
+  };
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
+    setSelectedProduct(null);
   };
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -90,7 +122,7 @@ const Products = () => {
     [page, rowsPerPage, products]
   );
 
-  console.log(listProducts);
+  console.log(listProducts, selectedProduct);
 
   useEffect(() => {
     dispatch(addProducts(products));
@@ -98,41 +130,39 @@ const Products = () => {
 
   return (
     <Box>
-      <TabPanel value={tab} index={0}>
-        <Grid
-          container
-          item
-          justifyContent="space-around"
-          alignItems="baseline"
-          height="calc(100% - 55px)"
-        >
-          {isLoading ? (
-            <CircularProgress
-              sx={{ position: 'absolute', top: '50%', transform: 'translate(0,-50%)' }}
+      <Box className={classes.mainBox}>
+        <NavBtns classes={classes.buttons} />
+
+        {tab === 0 ? (
+          <Grid container item className={classes.grid}>
+            {isLoading ? (
+              <CircularProgress
+                sx={{ position: 'absolute', top: '50%', transform: 'translate(0,-50%)' }}
+              />
+            ) : (
+              ''
+            )}
+            {listProducts?.map((product) => (
+              <MediaCard key={product.title} product={product} />
+            ))}
+            {error ? 'Sorry. Server is not responding...' : ''}
+          </Grid>
+        ) : (
+          <Box sx={{ width: '95%' }}>
+            <Table
+              columns={tableColumns}
+              data={tab === 1 ? addedProducts : listProducts}
+              onclick={handleTableClick}
+              multipleSelector={false}
+              //   selectedId={selectedId}
+              sortBy={tableColumns[0].accessor}
+              isLoading={isLoading}
+              isSearch={false}
             />
-          ) : (
-            ''
-          )}
-          {listProducts?.map((product) => (
-            <MediaCard key={product.title} product={product} />
-          ))}
-          {error ? 'Sorry. Server is not responding...' : ''}
-        </Grid>
-      </TabPanel>
-      <TabPanel value={tab} index={1}>
-        <Table
-          columns={tableColumns}
-          data={listProducts}
-          onclick={() => {}}
-          multipleSelector={false}
-          //   selectedId={selectedId}
-          sortBy={tableColumns[0].accessor}
-          // rowsPerPageOptions={[8, 16, 20]}
-          // onPageChangeClick={handleChangeRowsPerPage}
-          isLoading={isLoading}
-          isSearch={false}
-        />
-      </TabPanel>
+          </Box>
+        )}
+      </Box>
+
       <TablePagination
         className={classes.paginator}
         SelectProps={{ disabled: isLoading || !products?.length }}
@@ -145,6 +175,7 @@ const Products = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         rowsPerPageOptions={[8, 16, 20]}
       />
+
       <Box
         sx={{
           borderBottom: 1,
@@ -157,6 +188,7 @@ const Products = () => {
         <Tabs value={tab} onChange={handleChangeTab} aria-label="basic tabs example">
           <Tab label="Products" {...a11yProps(0)} />
           <Tab label="Created Products" {...a11yProps(1)} />
+          <Tab label="Published Products" {...a11yProps(2)} />
         </Tabs>
       </Box>
     </Box>

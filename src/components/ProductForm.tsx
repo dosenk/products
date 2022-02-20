@@ -1,12 +1,16 @@
 import { Box, TextField, Grid, Button, CircularProgress } from '@mui/material';
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { saveProduct, useAddProductMutation } from '../services/ProducService';
 import { productFormInputs } from './constants/constants';
 import { FileInput } from './modules/FileInput';
 import { IProduct } from '../models/IProduct';
 import { useAppDispatch } from '../hooks/redux';
+import { useParams } from 'react-router-dom';
+import { IParams } from './Product';
 
 const ProductForm = () => {
+  const { id } = useParams<IParams>();
+  console.log(id);
   const [product, setProduct] = useState<IProduct>({});
   const [errors, setErrors] = useState(false);
   const [addProduct, { data: products, isLoading, error }] = useAddProductMutation();
@@ -48,6 +52,8 @@ const ProductForm = () => {
                 fullWidth
                 onChange={(e) => handleChange(e, input.name)}
                 sx={{ marginBottom: '15px' }}
+                multiline={!!input.multiline}
+                rows={!!input.multiline ? input.multiline : 1}
               />
             ) : (
               <FileInput

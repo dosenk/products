@@ -8,14 +8,16 @@ import {
   Typography,
   CardActions,
   Rating,
-  Chip
+  Chip,
+  Button
 } from '@mui/material';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { useFetchAppProductQuery } from '../services/ProducService';
 import StarIcon from '@mui/icons-material/Star';
+import { NavLink } from 'react-router-dom';
 
-interface IParams {
+export interface IParams {
   id: string;
 }
 
@@ -24,7 +26,19 @@ const Product: FC = () => {
   const { data: product, isLoading, error } = useFetchAppProductQuery(id);
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <Button variant="contained" sx={{ position: 'absolute', left: '10px', top: '80px' }}>
+        <NavLink style={{ textDecoration: 'none', color: '#fff' }} to={'/products'}>
+          Back
+        </NavLink>
+      </Button>
       {error ? 'Sorry. Server is not responding...' : ''}
       {isLoading ? (
         <CircularProgress />
