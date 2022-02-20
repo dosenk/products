@@ -33,3 +33,25 @@ export const productFormInputs = [
     type: 'text'
   }
 ];
+
+export const tableColumns = [
+  {
+    accessor: 'category',
+    Header: 'category'
+    // width: 140,
+  },
+  {
+    accessor: 'price',
+    Header: 'price',
+    ortType: 'basic'
+  },
+  {
+    accessor: 'title',
+    Header: 'title',
+    sortType: 'basic'
+  },
+  {
+    accessor: 'description',
+    Header: 'description'
+  }
+];

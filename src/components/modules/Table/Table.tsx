@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useEffect, forwardRef, useRef, useState } from 'react';
+import { useEffect, forwardRef, useRef, useState, ChangeEvent } from 'react';
 import {
   makeStyles,
   Checkbox,
@@ -48,24 +48,23 @@ const useStyleSortLabel = makeStyles({
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface iTable {
-  columns,
-  data,
-  skipPageReset,
-  resetPage,
-  onclick,
-  selectedId = null,
-  multipleSelector = true,
-  onPageChangeClick,
-  rowsPerPageOptions = [],
-  sortBy,
-  isDescSortDirection = false,
-  isSearch = false,
-  isResetSelectedRow = true,
-  style = {
-  footer: {}
-},
-isLoading
+  columns?: any;
+  data: any;
+  skipPageReset?: any;
+  resetPage?: any;
+  onclick?: any;
+  selectedId?: any;
+  multipleSelector?: any;
+  onPageChangeClick?: any;
+  rowsPerPageOptions?: any;
+  sortBy?: any;
+  isDescSortDirection?: any;
+  isSearch?: any;
+  isResetSelectedRow?: any;
+  style?: any;
+  isLoading?: any;
 }
 
 const Table = ({
@@ -86,9 +85,13 @@ const Table = ({
     footer: {}
   },
   isLoading
-}) => {
+}: iTable) => {
   const selectedRowIds = {};
-  if (selectedId !== null) selectedRowIds[selectedId] = true;
+  if (selectedId !== null) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    selectedRowIds[selectedId] = true;
+  }
   const classesTd = useStylesTd();
   const classesSortLabel = useStyleSortLabel();
   const classesTdHeader = useStylesTdHead();
@@ -104,7 +107,7 @@ const Table = ({
     setGlobalFilter,
     toggleAllRowsSelected,
     state: { pageIndex, pageSize, globalFilter }
-  } = useTable(
+  }: any = useTable(
     {
       columns,
       data,
@@ -135,18 +138,16 @@ const Table = ({
   const [pageNum, setPageNum] = useState(pageIndex);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0] || 10);
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (event: ChangeEvent, newPage: string) => {
     if (typeof onPageChangeClick === 'function') onPageChangeClick();
     if (isResetSelectedRow) toggleAllRowsSelected(false);
     gotoPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setPageSize(Number(event.target.value));
     setRowsPerPage(Number(event.target.value));
   };
-
-  const removeByIndexs = (array, indexs) => array.filter((_, i) => !indexs.includes(i));
 
   return (
     <TableContainer style={{ height: '100%', overflow: 'visible', position: 'relative' }}>
@@ -155,6 +156,8 @@ const Table = ({
           sx={{
             width: '100%',
             height: '100%',
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             backgroundColor: 'rgba(159,161,159,0.5)',
             zIndex: '1000',
             position: 'absolute'
@@ -175,6 +178,8 @@ const Table = ({
       )}
       {isSearch ? (
         <GlobalFilter
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           value={searchValue}
           setValue={setSearchValue}
           preGlobalFilteredRows={preGlobalFilteredRows}
@@ -187,9 +192,9 @@ const Table = ({
       )}
       <MaUTable {...getTableProps()}>
         <TableHead>
-          {headerGroups.map((headerGroup) => (
+          {headerGroups.map((headerGroup: any) => (
             <TableRow style={{ backgroundColor: '#333234' }} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => {
+              {headerGroup.headers.map((column: any) => {
                 return (
                   <TableCell
                     {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -231,7 +236,7 @@ const Table = ({
               "No such elements"
             </TableRow>
           ) : (
-            page.map((row, i) => {
+            page.map((row: any, i: any) => {
               prepareRow(row);
               return (
                 <TableRow
@@ -246,7 +251,7 @@ const Table = ({
                     if (typeof onclick === 'function') onclick(row);
                   }}
                 >
-                  {row.cells.map((cell) => {
+                  {row.cells.map((cell: any) => {
                     return (
                       <TableCell {...cell.getCellProps()} className={classesTd.root}>
                         {cell.render('Cell')}
@@ -271,6 +276,8 @@ const Table = ({
               labelDisplayedRows={({ from, to, count }) => {
                 return `${from}-${to} "in" ${count}`;
               }}
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}

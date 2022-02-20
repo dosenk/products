@@ -2,6 +2,8 @@ import React, { FC, useState } from 'react';
 import { IProduct } from '../../models/IProduct';
 import { Box } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
+import { tableColumns } from '../constants/constants';
+import Table from './Table/Table';
 
 const ProductTable: FC = () => {
   const { products: publicProducts } = useAppSelector((state) => state.productReducer);
@@ -11,7 +13,21 @@ const ProductTable: FC = () => {
   console.log(publicProducts, JSON.parse(addedProducts));
   return (
     <Box>
-      <Table />
+      <Table
+        columns={tableColumns}
+        data={publicProducts}
+        //   skipPageReset={skipPageReset}
+        //   resetPage={resetPage}
+        onclick={() => {}}
+        multipleSelector={false}
+        //   selectedId={selectedId}
+        sortBy={tableColumns[0].accessor}
+        rowsPerPageOptions={[7]}
+        isResetSelectedRow={false}
+        isDescSortDirection={true}
+        isLoading={false}
+        isSearch={false}
+      />
     </Box>
   );
 };
