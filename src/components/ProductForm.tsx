@@ -1,6 +1,6 @@
-import { Box, TextField, Grid, Button } from '@mui/material';
-import React, { ChangeEvent, useState, useEffect } from 'react';
-import { useAddProductMutation } from '../services/ProducService';
+import { Box, TextField, Grid, Button, CircularProgress } from '@mui/material';
+import React, { useState } from 'react';
+import { saveProduct, useAddProductMutation } from '../services/ProducService';
 import { productFormInputs } from './constants/constants';
 import { FileInput } from './modules/FileInput';
 import { IProduct } from '../models/IProduct';
@@ -8,20 +8,23 @@ import { IProduct } from '../models/IProduct';
 const ProductForm = () => {
   const [product, setProduct] = useState<IProduct>({});
   const [errors, setErrors] = useState(false);
-  const [addProduct, {}] = useAddProductMutation();
+  const [addProduct, { data: products, isLoading, error }] = useAddProductMutation();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
-    const { value, type, files } = e.target;
-    setProduct({ ...product, [name]: type === 'file' ? files?[0].name : value });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    name: string
+  ) => {
+    const { value, type } = e.target; // e.target.files
+    const image = 'https://i.pravatar.cc'; // files[0] - img
+    setProduct({ ...product, [name]: type === 'file' ? image : value });
   };
 
   const handleSave = async () => {
     const res = await addProduct(product);
     console.log(res);
-    console.log(product);
+    setProduct({});
+    saveProduct(res);
   };
-
-  useEffect(() => {}, [product]);
 
   return (
     <Grid
@@ -32,31 +35,35 @@ const ProductForm = () => {
         alignItems: 'center'
       }}
     >
-      <Box sx={{ width: '500px' }} component="form">
-        {productFormInputs.map((input) => {
-          return input.type === 'text' ? (
-            <TextField
-              key={input.name}
-              required
-              label={input.name}
-              fullWidth
-              onChange={(e) => handleChange(e, input.name)}
-              sx={{ marginBottom: '15px' }}
-            />
-          ) : (
-            <FileInput
-              key={input.name}
-              {...input}
-              errors={errors}
-              setErrors={setErrors}
-              handleChange={handleChange}
-            />
-          );
-        })}
-        <Button variant="contained" sx={{ float: 'right' }} onClick={handleSave}>
-          Save
-        </Button>
-      </Box>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <Box sx={{ width: '500px' }} component="form">
+          {productFormInputs.map((input) => {
+            return input.type === 'text' ? (
+              <TextField
+                key={input.name}
+                required
+                label={input.name}
+                fullWidth
+                onChange={(e) => handleChange(e, input.name)}
+                sx={{ marginBottom: '15px' }}
+              />
+            ) : (
+              <FileInput
+                key={input.name}
+                {...input}
+                errors={errors}
+                setErrors={setErrors}
+                handleChange={handleChange}
+              />
+            );
+          })}
+          <Button variant="contained" sx={{ float: 'right' }} onClick={handleSave}>
+            Save
+          </Button>
+        </Box>
+      )}
     </Grid>
   );
 };

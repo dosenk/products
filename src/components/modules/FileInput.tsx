@@ -17,7 +17,7 @@ interface FileInputProps {
 }
 
 interface IFiles {
-    name: string;
+  name: string;
 }
 
 export const FileInput: React.FC<FileInputProps> = ({ name, handleChange, errors, setErrors }) => {
@@ -30,14 +30,12 @@ export const FileInput: React.FC<FileInputProps> = ({ name, handleChange, errors
   };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const files: FileList = e.target.files!;
     const { files } = e.target;
-    // const { name } = files[0];
-    if (files?.length) return;
-      const fileName = files?[0].name;
-    setVal(name);
-    handleChange(e, fileName);
-      setErrors(files?[0].name.search('.img') === -1);
+    // if (files?.length) return;
+    //   const fileName = files?[0].name: <File>;
+    setVal('test.img');
+    handleChange(e, 'image');
+    //   setErrors(files?[0].name.search('.img') === -1);
   };
 
   return (

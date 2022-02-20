@@ -1,6 +1,4 @@
 import { AsyncThunk, createAsyncThunk, createSlice, PayloadAction, Slice } from '@reduxjs/toolkit';
-import { AxiosResponse } from 'axios';
-import { $api } from '../../api/api';
 import { IProduct } from '../../models/IProduct';
 
 interface ProductState {

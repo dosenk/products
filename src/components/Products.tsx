@@ -39,15 +39,15 @@ const Products = () => {
   );
 
   return (
-    <Box>
-      <Grid
-        container
-        item
-        justifyContent="space-around"
-        alignItems="baseline"
-        height="calc(100% - 55px)"
-      >
-        {isLoading ? <CircularProgress /> : ''}
+    <Box sx={{ height: '100%' }}>
+      <Grid container item justifyContent="space-around" alignItems="baseline" height="100%">
+        {isLoading ? (
+          <CircularProgress
+            sx={{ position: 'absolute', top: '50%', transform: 'translate(0,-50%)' }}
+          />
+        ) : (
+          ''
+        )}
         {listProducts?.map((product) => (
           <MediaCard key={product.title} product={product} />
         ))}
