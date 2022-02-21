@@ -10,11 +10,11 @@ interface INavBtns {
 
 export const BackBtn = () => {
   return (
-    <Button variant="contained" sx={{ position: 'absolute', left: '10px', top: '80px' }}>
-      <NavLink style={{ textDecoration: 'none', color: '#fff' }} to={'/products'}>
+    <NavLink style={{ textDecoration: 'none', color: '#fff' }} to={'/products'}>
+      <Button variant="contained" sx={{ position: 'absolute', left: '10px', top: '80px' }}>
         Back
-      </NavLink>
-    </Button>
+      </Button>
+    </NavLink>
   );
 };
 
@@ -28,8 +28,10 @@ const NavBtns: FC<INavBtns> = ({ classes, navBtn }) => {
     >
       {navBtn.map((btn: any) => {
         return (
-          <Button key={btn.name} disabled={btn.disabled}>
-            <NavLink to={btn.link}>{btn.name}</NavLink>
+          <Button key={btn.name} disabled={btn.disabled} sx={{ padding: '0px' }}>
+            <NavLink to={btn.link} style={{ padding: '6px 16px', width: '100%' }}>
+              {btn.name}
+            </NavLink>
           </Button>
         );
       })}

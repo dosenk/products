@@ -7,21 +7,13 @@ import MediaCard from './modules/MediaCard';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import ProductTable from './modules/ProductTable';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { useAppDispatch } from '../hooks/redux';
 import { addProducts } from '../store/reducers/ProductSlice';
 import Table from './modules/Table/Table';
 import { navBtn, tableColumns } from './constants/constants';
 import { IProduct } from '../models/IProduct';
 import NavBtns from './modules/NavBtns';
 import { IMenu } from '../models/IMenu';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
 
 const useStyles = makeStyles(() => ({
   paginator: {
@@ -52,26 +44,6 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   }
 }));
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
 
 function a11yProps(index: number) {
   return {
