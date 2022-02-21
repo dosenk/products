@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 import { useFetchAppProductQuery } from '../services/ProducService';
 import StarIcon from '@mui/icons-material/Star';
 import { NavLink } from 'react-router-dom';
+import { BackBtn } from './modules/NavBtns';
 
 export interface IParams {
   id: string;
@@ -34,11 +35,7 @@ const Product: FC = () => {
         justifyContent: 'center'
       }}
     >
-      <Button variant="contained" sx={{ position: 'absolute', left: '10px', top: '80px' }}>
-        <NavLink style={{ textDecoration: 'none', color: '#fff' }} to={'/products'}>
-          Back
-        </NavLink>
-      </Button>
+      <BackBtn />
       {error ? 'Sorry. Server is not responding...' : ''}
       {isLoading ? (
         <CircularProgress />

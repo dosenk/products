@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, CircularProgress, Grid, TablePagination } from '@mui/material';
+import { Box, CircularProgress, Grid, TablePagination } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useEffect, useMemo, useState } from 'react';
 import { useFetchAppProductsQuery } from '../services/ProducService';
@@ -12,10 +12,10 @@ import ProductTable from './modules/ProductTable';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { addProducts } from '../store/reducers/ProductSlice';
 import Table from './modules/Table/Table';
-import { tableColumns } from './constants/constants';
-import { NavLink } from 'react-router-dom';
+import { navBtn, tableColumns } from './constants/constants';
 import { IProduct } from '../models/IProduct';
 import NavBtns from './modules/NavBtns';
+import { IMenu } from '../models/IMenu';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,8 +33,7 @@ const useStyles = makeStyles(() => ({
     right: 0
   },
   buttons: {
-    position: 'relative',
-    left: '10px',
+    // marginRight: '5px',
     '& a': {
       color: '#fff',
       textDecoration: 'none'
@@ -50,8 +49,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-around',
     alignItems: 'baseline',
     height: 'calc(100% - 50px)',
-    width: '95%'
-    // marginBottom: '55px'
+    width: '100%'
   }
 }));
 
@@ -87,23 +85,30 @@ const Products = () => {
   const classes = useStyles();
   const { data: products, isLoading, error } = useFetchAppProductsQuery('');
   const [page, setPage] = useState(0);
+  const [btns, setBtns] = useState<IMenu[]>(navBtn);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [tab, setTab] = React.useState(0);
   // const { products: publicProducts } = useAppSelector((state) => state.productReducer);
-  const addedProducts = JSON.parse(localStorage.getItem('products') ?? '');
+  const addedProducts = JSON.parse(localStorage.getItem('products') ?? '[]');
   // const [addedProducts, setAddedProducts] = useState(addedProducts ? JSON.parse(addedProducts) : []);
   // const a = useAppSelector((state) => state.productReducer.products);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
   const handleTableClick = (row: any) => {
     setSelectedProduct(row.original);
-    console.log(row);
-    // row.toggleRowSelected();
+    const { id } = row.original;
+    console.log(id.toString());
+    setBtns(
+      btns.map((btn) =>
+        btn.name !== 'add' ? { ...btn, disabled: false, link: `/products/edit/${id}` } : btn
+      )
+    );
   };
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
     setSelectedProduct(null);
+    setBtns(btns.map((btn) => (btn.name !== 'add' ? { ...btn, disabled: true } : btn)));
   };
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -131,7 +136,7 @@ const Products = () => {
   return (
     <Box>
       <Box className={classes.mainBox}>
-        <NavBtns classes={classes.buttons} />
+        <NavBtns classes={classes.buttons} navBtn={btns} />
 
         {tab === 0 ? (
           <Grid container item className={classes.grid}>
@@ -148,7 +153,7 @@ const Products = () => {
             {error ? 'Sorry. Server is not responding...' : ''}
           </Grid>
         ) : (
-          <Box sx={{ width: '95%' }}>
+          <Box sx={{ width: '100%', marginLeft: '10px' }}>
             <Table
               columns={tableColumns}
               data={tab === 1 ? addedProducts : listProducts}

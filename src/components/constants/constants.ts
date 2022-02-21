@@ -10,11 +10,18 @@ export const menu: IMenu[] = [
 export const navBtn: IMenu[] = [
   {
     name: 'add',
-    link: '/products/add'
+    link: '/products/add',
+    disabled: false
   },
   {
     name: 'edit',
-    link: '/products/edit'
+    link: '/products/edit',
+    disabled: true
+  },
+  {
+    name: 'delete',
+    link: '/products/delete',
+    disabled: true
   }
 ];
 

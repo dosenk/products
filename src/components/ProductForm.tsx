@@ -7,6 +7,7 @@ import { IProduct } from '../models/IProduct';
 import { useAppDispatch } from '../hooks/redux';
 import { useParams } from 'react-router-dom';
 import { IParams } from './Product';
+import { BackBtn } from './modules/NavBtns';
 
 const ProductForm = () => {
   const { id } = useParams<IParams>();
@@ -39,6 +40,7 @@ const ProductForm = () => {
         alignItems: 'center'
       }}
     >
+      <BackBtn />
       {isLoading ? (
         <CircularProgress />
       ) : (
