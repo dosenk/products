@@ -1,5 +1,5 @@
 import { Box, TextField, Grid, Button, CircularProgress } from '@mui/material';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { saveProduct, useAddProductMutation } from '../services/ProducService';
 import { productFormInputs } from './constants/constants';
 import { FileInput } from './modules/FileInput';
@@ -7,28 +7,69 @@ import { IProduct } from '../models/IProduct';
 import { useAppDispatch } from '../hooks/redux';
 import { useParams } from 'react-router-dom';
 import { IParams } from './Product';
+import { BackBtn } from './modules/NavBtns';
 
 const ProductForm = () => {
   const { id } = useParams<IParams>();
-  console.log(id);
   const [product, setProduct] = useState<IProduct>({});
-  const [errors, setErrors] = useState(false);
+  const [productNotValidated, setProductNotValidated] = useState<IProduct>({});
+  const [errors, setErrors] = useState(true);
   const [addProduct, { data: products, isLoading, error }] = useAddProductMutation();
+
+  const validator = (value: string, pattern: string | undefined) => {
+    if (pattern !== 'undefined') {
+      const regExp = new RegExp(pattern as string);
+      return regExp.test(value) ? value : 'error';
+    }
+
+    return value;
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     name: string
   ) => {
-    const { value, type } = e.target; // e.target.files
-    const image = 'https://i.pravatar.cc'; // files[0] - img
-    setProduct({ ...product, [name]: type === 'file' ? image : value });
+    const { value, type, pattern } = e.target as HTMLInputElement;
+    setProduct({ ...product, [name]: validator(value, pattern) });
+    setProductNotValidated({ ...product, [name]: value });
   };
+
+  const fieldValidator = useCallback(
+    (field) => {
+      return product[field as keyof IProduct] === 'error';
+    },
+    [product]
+  );
+
+  useEffect(() => {
+    const keys: string[] = Object.keys(product).filter((field) => field !== 'id');
+    const allRequiredFilds: boolean = productFormInputs.length === keys.length;
+    if (keys.some((key) => product[key as keyof IProduct] === 'error') || !allRequiredFilds) {
+      setErrors(true);
+      return;
+    }
+    setErrors(false);
+  }, [product]);
 
   const handleSave = async () => {
     const res = await addProduct(product).unwrap();
     setProduct({});
-    saveProduct(res);
+    setProductNotValidated({});
+    saveProduct(res, Number(id));
   };
+
+  useEffect(() => {
+    if (id) {
+      const productsFromLocalStorage = JSON.parse(localStorage.getItem('products') ?? '[]')
+        .filter((localStorageProduct: IProduct) => localStorageProduct.id === Number(id))
+        .at(0);
+      const serverProducts = JSON.parse(localStorage.getItem('serverProducts') ?? '[]')
+        .filter((localStorageProduct: IProduct) => localStorageProduct.id === Number(id))
+        .at(0);
+      setProduct(productsFromLocalStorage ?? serverProducts);
+      setProductNotValidated(productsFromLocalStorage ?? serverProducts);
+    }
+  }, [id]);
 
   return (
     <Grid
@@ -44,8 +85,11 @@ const ProductForm = () => {
       ) : (
         <Box sx={{ width: '500px' }} component="form">
           {productFormInputs.map((input) => {
-            return input.type === 'text' ? (
+            const value = productNotValidated[input.name as keyof IProduct];
+            return (
               <TextField
+                value={value || ''}
+                error={fieldValidator(input.name)}
                 key={input.name}
                 required
                 label={input.name}
@@ -54,18 +98,19 @@ const ProductForm = () => {
                 sx={{ marginBottom: '15px' }}
                 multiline={!!input.multiline}
                 rows={!!input.multiline ? input.multiline : 1}
-              />
-            ) : (
-              <FileInput
-                key={input.name}
-                {...input}
-                errors={errors}
-                setErrors={setErrors}
-                handleChange={handleChange}
+                inputProps={{
+                  pattern: `${input.pattern}`,
+                  title: ''
+                }}
               />
             );
           })}
-          <Button variant="contained" sx={{ float: 'right' }} onClick={handleSave}>
+          <Button
+            disabled={errors}
+            variant="contained"
+            sx={{ float: 'right' }}
+            onClick={handleSave}
+          >
             Save
           </Button>
         </Box>

@@ -20,32 +20,37 @@ export const navBtn: IMenu[] = [
   },
   {
     name: 'delete',
-    link: '/products/delete',
-    disabled: true
+    disabled: true,
+    action: 'handleDelete'
   }
 ];
 
 export const productFormInputs = [
   {
     name: 'title',
-    type: 'text'
+    type: 'text',
+    pattern: '^.{5,}$'
   },
   {
     name: 'price',
-    type: 'text'
+    type: 'text',
+    pattern: '^\\d{1,}$'
   },
   {
     name: 'image',
-    type: 'file'
+    type: 'text',
+    pattern: '^.{5,}$'
   },
   {
     name: 'category',
-    type: 'text'
+    type: 'text',
+    pattern: '^.{1,}$'
   },
   {
     name: 'description',
     type: 'text',
-    multiline: 4
+    multiline: 4,
+    pattern: '^.{5,}$'
   }
 ];
 

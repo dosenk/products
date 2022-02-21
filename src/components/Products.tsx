@@ -1,7 +1,12 @@
 import { Box, CircularProgress, Grid, TablePagination } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useEffect, useMemo, useState } from 'react';
-import { saveProducts, useFetchAppProductsQuery } from '../services/ProducService';
+import {
+  deleteProductFromLocaleStorage,
+  saveProducts,
+  useDeleteProductMutation,
+  useFetchAppProductsQuery
+} from '../services/ProducService';
 import { sliceProduct } from '../utils/utils';
 import MediaCard from './modules/MediaCard';
 import Tabs from '@mui/material/Tabs';
@@ -56,31 +61,45 @@ const Products = () => {
   const dispatch = useAppDispatch();
   const classes = useStyles();
   const { data: recivedProduct, isLoading, error } = useFetchAppProductsQuery('');
+  const [deleteProduct] = useDeleteProductMutation();
   const [page, setPage] = useState(0);
   const [btns, setBtns] = useState<IMenu[]>(navBtn);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [tab, setTab] = React.useState(0);
-  const addedProducts = JSON.parse(localStorage.getItem('products') ?? '[]');
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const [products, setProducts] = useState<IProduct[]>();
-  const localProducts = useMemo(
-    () => JSON.parse(localStorage.getItem('serverProducts') ?? '[]'),
-    [localStorage]
+  const [localProducts, setLocalProducts] = useState<IProduct[]>(
+    JSON.parse(localStorage.getItem('serverProducts') ?? '[]')
   );
+  const [addedProducts, setAddedProducts] = useState<IProduct[]>(
+    JSON.parse(localStorage.getItem('products') ?? '[]')
+  );
+
+  const handleDelete = () => {
+    if (selectedProduct) {
+      if (localProducts.findIndex((el) => el.id === selectedProduct.id)) {
+        console.log(1);
+        deleteProduct(`${selectedProduct.id}`);
+      }
+
+      deleteProductFromLocaleStorage(selectedProduct.id);
+    }
+  };
 
   const handleTableClick = (row: any) => {
     setSelectedProduct(row.original);
     const { id } = row.original;
     setBtns(
       btns.map((btn) =>
-        btn.name !== 'add' ? { ...btn, disabled: false, link: `/products/edit/${id}` } : btn
+        btn.name !== 'add' ? { ...btn, disabled: false, link: `${btn.link}/${id}` } : btn
       )
     );
   };
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
+    console.log(addedProducts, localProducts);
     setProducts(newValue === 1 ? addedProducts : localProducts);
+    setTab(newValue);
     setSelectedProduct(null);
     setBtns(btns.map((btn) => (btn.name !== 'add' ? { ...btn, disabled: true } : btn)));
   };
@@ -102,15 +121,19 @@ const Products = () => {
   );
 
   useEffect(() => {
+    if (!recivedProduct) return;
     dispatch(addProducts(recivedProduct));
-    if (localProducts) setProducts(localProducts);
-    else saveProducts(recivedProduct);
+    if (!localProducts.length) {
+      saveProducts(recivedProduct);
+      setLocalProducts(recivedProduct);
+    }
+    setProducts(!localProducts.length ? recivedProduct : localProducts);
   }, [recivedProduct]);
 
   return (
     <Box>
       <Box className={classes.mainBox}>
-        <NavBtns classes={classes.buttons} navBtn={btns} />
+        <NavBtns classes={classes.buttons} navBtn={btns} actions={{ handleDelete }} />
 
         {tab === 0 ? (
           <Grid container item className={classes.grid}>
@@ -127,13 +150,13 @@ const Products = () => {
           <Box sx={{ width: '100%', marginLeft: '10px' }}>
             <Table
               columns={tableColumns}
-              data={tab === 1 ? addedProducts : listProducts}
+              data={products}
               onclick={handleTableClick}
               multipleSelector={false}
               //   selectedId={selectedId}
               sortBy={tableColumns[0].accessor}
               isLoading={isLoading}
-              isSearch={false}
+              isSearch={true}
             />
           </Box>
         )}

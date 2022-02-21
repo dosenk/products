@@ -6,6 +6,7 @@ import { IMenu } from '../../models/IMenu';
 interface INavBtns {
   classes: any;
   navBtn: IMenu[];
+  actions: any;
 }
 
 export const BackBtn = () => {
@@ -18,7 +19,7 @@ export const BackBtn = () => {
   );
 };
 
-const NavBtns: FC<INavBtns> = ({ classes, navBtn }) => {
+const NavBtns: FC<INavBtns> = ({ classes, navBtn, actions }) => {
   return (
     <ButtonGroup
       variant="contained"
@@ -28,10 +29,21 @@ const NavBtns: FC<INavBtns> = ({ classes, navBtn }) => {
     >
       {navBtn.map((btn: any) => {
         return (
-          <Button key={btn.name} disabled={btn.disabled} sx={{ padding: '0px' }}>
-            <NavLink to={btn.link} style={{ padding: '6px 16px', width: '100%' }}>
-              {btn.name}
-            </NavLink>
+          <Button
+            key={btn.name}
+            disabled={btn.disabled}
+            sx={{ padding: btn.link ? '0px' : '6px 16px' }}
+            onClick={() => {
+              if (btn.action) return actions[btn.action]();
+            }}
+          >
+            {btn.link ? (
+              <NavLink to={btn.link} style={{ padding: '6px 16px', width: '100%' }}>
+                {btn.name}
+              </NavLink>
+            ) : (
+              btn.name
+            )}
           </Button>
         );
       })}

@@ -28,14 +28,31 @@ export const productApi = createApi({
         method: 'POST',
         body: product
       })
+    }),
+    deleteProduct: build.mutation<IProduct, string>({
+      query: (product) => ({
+        url: `/${product}`,
+        method: 'DELETE'
+      })
     })
   })
 });
 
-export const { useFetchAppProductsQuery, useFetchAppProductQuery, useAddProductMutation } =
-  productApi;
+export const {
+  useFetchAppProductsQuery,
+  useFetchAppProductQuery,
+  useAddProductMutation,
+  useDeleteProductMutation
+} = productApi;
 
-export const saveProduct = (product: IProduct): void => {
+const editProduct = (id: number, prodArr: IProduct[], product: IProduct): void => {
+  prodArr.forEach((productItem: IProduct, index: number) => {
+    if (productItem.id === id) {
+      prodArr[index] = product;
+    }
+  });
+};
+export const saveProduct = (product: IProduct, id: number): void => {
   const products = localStorage.getItem('products');
 
   if (!products) {
@@ -43,11 +60,31 @@ export const saveProduct = (product: IProduct): void => {
     return;
   }
   const prodArr = JSON.parse(products);
-  const lastId = prodArr[prodArr.length - 1].id;
-  prodArr.push({ ...product, id: lastId + 1 });
+  if (id) {
+    editProduct(id, prodArr, product);
+  } else {
+    const lastId = prodArr[prodArr.length - 1].id;
+    prodArr.push({ ...product, id: lastId + 1 });
+  }
   localStorage.setItem('products', JSON.stringify(prodArr));
 };
 
 export const saveProducts = (products: IProduct[] | undefined): void => {
-  localStorage.setItem('products', JSON.stringify(products));
+  localStorage.setItem('serverProducts', JSON.stringify(products));
+};
+
+export const deleteProductFromLocaleStorage = (id: number | undefined): void => {
+  const products = JSON.parse(localStorage.getItem('products') ?? '[]');
+  const recivedProduct = JSON.parse(localStorage.getItem('serverProducts') ?? '[]');
+  const allProducts = [...products, ...recivedProduct];
+  if (allProducts.length) {
+    localStorage.setItem(
+      'products',
+      JSON.stringify(products.filter((product: IProduct) => product.id !== id))
+    );
+    localStorage.setItem(
+      'serverProducts',
+      JSON.stringify(recivedProduct.filter((product: IProduct) => product.id !== id))
+    );
+  }
 };
