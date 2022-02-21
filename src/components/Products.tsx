@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Grid, TablePagination } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useEffect, useMemo, useState } from 'react';
-import { useFetchAppProductsQuery } from '../services/ProducService';
+import { saveProducts, useFetchAppProductsQuery } from '../services/ProducService';
 import { sliceProduct } from '../utils/utils';
 import MediaCard from './modules/MediaCard';
 import Tabs from '@mui/material/Tabs';
@@ -55,16 +55,18 @@ function a11yProps(index: number) {
 const Products = () => {
   const dispatch = useAppDispatch();
   const classes = useStyles();
-  const { data: products, isLoading, error } = useFetchAppProductsQuery('');
+  const { data: recivedProduct, isLoading, error } = useFetchAppProductsQuery('');
   const [page, setPage] = useState(0);
   const [btns, setBtns] = useState<IMenu[]>(navBtn);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [tab, setTab] = React.useState(0);
-  // const { products: publicProducts } = useAppSelector((state) => state.productReducer);
   const addedProducts = JSON.parse(localStorage.getItem('products') ?? '[]');
-  // const [addedProducts, setAddedProducts] = useState(addedProducts ? JSON.parse(addedProducts) : []);
-  // const a = useAppSelector((state) => state.productReducer.products);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [products, setProducts] = useState<IProduct[]>();
+  const localProducts = useMemo(
+    () => JSON.parse(localStorage.getItem('serverProducts') ?? '[]'),
+    [localStorage]
+  );
 
   const handleTableClick = (row: any) => {
     setSelectedProduct(row.original);
@@ -78,6 +80,7 @@ const Products = () => {
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
+    setProducts(newValue === 1 ? addedProducts : localProducts);
     setSelectedProduct(null);
     setBtns(btns.map((btn) => (btn.name !== 'add' ? { ...btn, disabled: true } : btn)));
   };
@@ -99,8 +102,10 @@ const Products = () => {
   );
 
   useEffect(() => {
-    dispatch(addProducts(products));
-  }, [products]);
+    dispatch(addProducts(recivedProduct));
+    if (localProducts) setProducts(localProducts);
+    else saveProducts(recivedProduct);
+  }, [recivedProduct]);
 
   return (
     <Box>
@@ -114,11 +119,8 @@ const Products = () => {
                 sx={{ position: 'absolute', top: '50%', transform: 'translate(0,-50%)' }}
               />
             ) : (
-              ''
+              listProducts?.map((product) => <MediaCard key={product.title} product={product} />)
             )}
-            {listProducts?.map((product) => (
-              <MediaCard key={product.title} product={product} />
-            ))}
             {error ? 'Sorry. Server is not responding...' : ''}
           </Grid>
         ) : (

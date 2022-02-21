@@ -221,19 +221,20 @@ const Table = ({
         </TableHead>
         <TableBody>
           {page.length === 0 ? (
-            <TableRow
-              key="default"
-              style={{
-                position: 'relative',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                height: '38px',
-                display: 'table-cell',
-                verticalAlign: 'middle',
-                textAlign: 'center'
-              }}
-            >
-              "No such elements"
+            <TableRow key="default">
+              <td
+                style={{
+                  position: 'relative',
+                  left: '50%',
+                  transform: 'translateX(-57%)',
+                  height: '38px',
+                  display: 'table-cell',
+                  verticalAlign: 'middle',
+                  textAlign: 'center'
+                }}
+              >
+                No such elements
+              </td>
             </TableRow>
           ) : (
             page.map((row: any, i: any) => {

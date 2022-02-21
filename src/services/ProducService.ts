@@ -47,3 +47,7 @@ export const saveProduct = (product: IProduct): void => {
   prodArr.push({ ...product, id: lastId + 1 });
   localStorage.setItem('products', JSON.stringify(prodArr));
 };
+
+export const saveProducts = (products: IProduct[] | undefined): void => {
+  localStorage.setItem('products', JSON.stringify(products));
+};
