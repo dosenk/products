@@ -1,9 +1,24 @@
-import React from 'react';
-import { navBtn } from '../constants/constants';
+import React, { FC } from 'react';
 import { Box, Button, ButtonGroup } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import { IMenu } from '../../models/IMenu';
 
-const NavBtns = ({ classes }: any) => {
+interface INavBtns {
+  classes: any;
+  navBtn: IMenu[];
+}
+
+export const BackBtn = () => {
+  return (
+    <Button variant="contained" sx={{ position: 'absolute', left: '10px', top: '80px' }}>
+      <NavLink style={{ textDecoration: 'none', color: '#fff' }} to={'/products'}>
+        Back
+      </NavLink>
+    </Button>
+  );
+};
+
+const NavBtns: FC<INavBtns> = ({ classes, navBtn }) => {
   return (
     <ButtonGroup
       variant="contained"
@@ -11,9 +26,9 @@ const NavBtns = ({ classes }: any) => {
       aria-label="outlined button group"
       className={classes}
     >
-      {navBtn.map((btn) => {
+      {navBtn.map((btn: any) => {
         return (
-          <Button>
+          <Button key={btn.name} disabled={btn.disabled}>
             <NavLink to={btn.link}>{btn.name}</NavLink>
           </Button>
         );
@@ -21,8 +36,5 @@ const NavBtns = ({ classes }: any) => {
     </ButtonGroup>
   );
 };
-// <Button disabled={!selectedProduct}>
-//     <NavLink to={`/products/edit/${selectedProduct?.id ?? ''}`}>Edit</NavLink>
-// </Button>
 
 export default NavBtns;
