@@ -75,15 +75,12 @@ const Products = () => {
     JSON.parse(localStorage.getItem('products') ?? '[]')
   );
 
-  const handleDelete = () => {
-    if (selectedProduct) {
-      if (localProducts.findIndex((el) => el.id === selectedProduct.id)) {
-        console.log(1);
-        deleteProduct(`${selectedProduct.id}`);
-      }
-
-      deleteProductFromLocaleStorage(selectedProduct.id);
+  const handleDelete = async () => {
+    if (!selectedProduct) return;
+    if (localProducts.findIndex((el) => el.id === selectedProduct.id)) {
+      const res = await deleteProduct(`${selectedProduct.id}`).unwrap();
     }
+    deleteProductFromLocaleStorage(selectedProduct.id);
   };
 
   const handleTableClick = (row: any) => {
@@ -97,7 +94,6 @@ const Products = () => {
   };
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(addedProducts, localProducts);
     setProducts(newValue === 1 ? addedProducts : localProducts);
     setTab(newValue);
     setSelectedProduct(null);
@@ -150,10 +146,9 @@ const Products = () => {
           <Box sx={{ width: '100%', marginLeft: '10px' }}>
             <Table
               columns={tableColumns}
-              data={products}
+              data={tab === 1 ? products : listProducts}
               onclick={handleTableClick}
               multipleSelector={false}
-              //   selectedId={selectedId}
               sortBy={tableColumns[0].accessor}
               isLoading={isLoading}
               isSearch={true}

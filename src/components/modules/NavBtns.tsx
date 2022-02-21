@@ -33,8 +33,9 @@ const NavBtns: FC<INavBtns> = ({ classes, navBtn, actions }) => {
             key={btn.name}
             disabled={btn.disabled}
             sx={{ padding: btn.link ? '0px' : '6px 16px' }}
-            onClick={() => {
-              if (btn.action) return actions[btn.action]();
+            onClick={async (e) => {
+              e.preventDefault();
+              if (btn.action) await actions[btn.action]();
             }}
           >
             {btn.link ? (

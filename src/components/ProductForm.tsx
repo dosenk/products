@@ -2,14 +2,12 @@ import { Box, TextField, Grid, Button, CircularProgress } from '@mui/material';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { saveProduct, useAddProductMutation } from '../services/ProducService';
 import { productFormInputs } from './constants/constants';
-import { FileInput } from './modules/FileInput';
 import { IProduct } from '../models/IProduct';
-import { useAppDispatch } from '../hooks/redux';
-import { useParams } from 'react-router-dom';
 import { IParams } from './Product';
+import { useParams, RouteComponentProps } from 'react-router-dom';
 import { BackBtn } from './modules/NavBtns';
 
-const ProductForm = () => {
+const ProductForm = ({ history }: RouteComponentProps) => {
   const { id } = useParams<IParams>();
   const [product, setProduct] = useState<IProduct>({});
   const [productNotValidated, setProductNotValidated] = useState<IProduct>({});
@@ -42,7 +40,9 @@ const ProductForm = () => {
   );
 
   useEffect(() => {
-    const keys: string[] = Object.keys(product).filter((field) => field !== 'id');
+    const keys: string[] = Object.keys(product).filter(
+      (field) => field !== 'id' && field !== 'rating'
+    );
     const allRequiredFilds: boolean = productFormInputs.length === keys.length;
     if (keys.some((key) => product[key as keyof IProduct] === 'error') || !allRequiredFilds) {
       setErrors(true);
@@ -56,6 +56,7 @@ const ProductForm = () => {
     setProduct({});
     setProductNotValidated({});
     saveProduct(res, Number(id));
+    if (id) history.goBack();
   };
 
   useEffect(() => {
@@ -80,6 +81,7 @@ const ProductForm = () => {
         alignItems: 'center'
       }}
     >
+      <BackBtn />
       {isLoading ? (
         <CircularProgress />
       ) : (

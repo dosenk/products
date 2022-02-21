@@ -44,33 +44,35 @@ export const {
   useAddProductMutation,
   useDeleteProductMutation
 } = productApi;
+export const saveProducts = (products: IProduct[] | undefined): void => {
+  localStorage.setItem('serverProducts', JSON.stringify(products));
+};
 
 const editProduct = (id: number, prodArr: IProduct[], product: IProduct): void => {
   prodArr.forEach((productItem: IProduct, index: number) => {
     if (productItem.id === id) {
-      prodArr[index] = product;
+      prodArr[index] = { ...product, id };
     }
   });
+  saveProducts(prodArr);
 };
 export const saveProduct = (product: IProduct, id: number): void => {
-  const products = localStorage.getItem('products');
+  const prodArr = JSON.parse(localStorage.getItem('products') ?? '[]');
+  const recivedProduct = JSON.parse(localStorage.getItem('serverProducts') ?? '[]');
 
-  if (!products) {
+  if (!prodArr.length && !id) {
     localStorage.setItem('products', JSON.stringify([product]));
     return;
   }
-  const prodArr = JSON.parse(products);
   if (id) {
-    editProduct(id, prodArr, product);
+    console.log(product, id);
+    editProduct(id, recivedProduct, product);
+    return;
   } else {
     const lastId = prodArr[prodArr.length - 1].id;
     prodArr.push({ ...product, id: lastId + 1 });
   }
   localStorage.setItem('products', JSON.stringify(prodArr));
-};
-
-export const saveProducts = (products: IProduct[] | undefined): void => {
-  localStorage.setItem('serverProducts', JSON.stringify(products));
 };
 
 export const deleteProductFromLocaleStorage = (id: number | undefined): void => {
@@ -87,4 +89,11 @@ export const deleteProductFromLocaleStorage = (id: number | undefined): void => 
       JSON.stringify(recivedProduct.filter((product: IProduct) => product.id !== id))
     );
   }
+};
+
+export const getProduct = (id: string): any => {
+  const products = JSON.parse(localStorage.getItem('products') ?? '[]');
+  const recivedProduct = JSON.parse(localStorage.getItem('serverProducts') ?? '[]');
+  const allProducts = [...products, ...recivedProduct];
+  return allProducts.filter((item) => item.id === id);
 };
