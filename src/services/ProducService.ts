@@ -1,5 +1,4 @@
-import { SerializedError } from '@reduxjs/toolkit';
-import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { IProduct } from '../models/IProduct';
 
 interface IData {
@@ -11,11 +10,13 @@ export const productApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://fakestoreapi.com/products'
   }),
+  tagTypes: ['Delete'],
   endpoints: (build) => ({
     fetchAppProducts: build.query<IProduct[], ''>({
       query: () => ({
         url: '/'
-      })
+      }),
+      providesTags: (result) => ['Delete']
     }),
     fetchAppProduct: build.query<IProduct, string>({
       query: (product) => ({
@@ -33,7 +34,8 @@ export const productApi = createApi({
       query: (product) => ({
         url: `/${product}`,
         method: 'DELETE'
-      })
+      }),
+      invalidatesTags: ['Delete']
     })
   })
 });
@@ -51,11 +53,12 @@ export const saveProducts = (products: IProduct[] | undefined): void => {
 const editProduct = (id: number, prodArr: IProduct[], product: IProduct): void => {
   prodArr.forEach((productItem: IProduct, index: number) => {
     if (productItem.id === id) {
-      prodArr[index] = { ...product, id };
+      prodArr[index] = { ...product, id: id > 20 ? product.id : id };
     }
   });
-  saveProducts(prodArr);
+  localStorage.setItem(id > 20 ? 'products' : 'serverProducts', JSON.stringify(prodArr));
 };
+
 export const saveProduct = (product: IProduct, id: number): void => {
   const prodArr = JSON.parse(localStorage.getItem('products') ?? '[]');
   const recivedProduct = JSON.parse(localStorage.getItem('serverProducts') ?? '[]');
@@ -65,8 +68,9 @@ export const saveProduct = (product: IProduct, id: number): void => {
     return;
   }
   if (id) {
-    console.log(product, id);
-    editProduct(id, recivedProduct, product);
+    const db =
+      recivedProduct.findIndex((item: IProduct) => item.id === id) >= 0 ? recivedProduct : prodArr;
+    editProduct(id, db, product);
     return;
   } else {
     const lastId = prodArr[prodArr.length - 1].id;

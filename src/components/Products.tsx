@@ -75,6 +75,8 @@ const Products = () => {
     JSON.parse(localStorage.getItem('products') ?? '[]')
   );
 
+  console.log(recivedProduct);
+
   const handleDelete = async () => {
     if (!selectedProduct) return;
     if (localProducts.findIndex((el) => el.id === selectedProduct.id)) {

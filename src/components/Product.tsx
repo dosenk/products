@@ -11,13 +11,11 @@ import {
   Chip,
   Button
 } from '@mui/material';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { getProduct, useFetchAppProductQuery } from '../services/ProducService';
+import { useFetchAppProductQuery } from '../services/ProducService';
 import StarIcon from '@mui/icons-material/Star';
-import { NavLink } from 'react-router-dom';
 import { BackBtn } from './modules/NavBtns';
-import { IProduct } from '../models/IProduct';
 
 export interface IParams {
   id: string;
